@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Veșnica Pomenire</title>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        body { background-color: black; color: white; font-family: Arial, sans-serif; text-align: center; }
+        .container { max-width: 600px; margin: auto; }
+        h2 { color: gold; }
+        img { max-width: 100%; height: auto; margin-top: 10px; }
+        .image-container { margin-top: 10px; position: relative; display: inline-block; }
+        .description { color: gray; font-size: 14px; }
+        .delete-btn { position: absolute; top: 5px; right: 5px; background: red; color: white; border: none; cursor: pointer; padding: 5px; }
+        #uploadSection { display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Familia Caraus</h2>
+        <div id="g_id_onload" data-client_id="140844347462-o7rk927bs07jsl5po0n9unon3nov60l1.apps.googleusercontent.com" data-callback="handleCredentialResponse"></div>
+        <div class="g_id_signin" data-type="standard"></div>
+        <div id="uploadSection">
+            <input type="file" id="imageInput" accept="image/*">
+            <input type="text" id="imageDescription" placeholder="Adăugați o descriere" style="margin-top:10px;">
+            <button onclick="uploadImage()">Încărcați</button>
+        </div>
+        <div id="imageGallery"></div>
+    </div>
+    
+    <script>
+        function handleCredentialResponse(response) {
+            console.log("Autentificat cu Google:", response);
+            document.getElementById("uploadSection").style.display = "block";
+        }
+
+        function uploadImage() {
+            const input = document.getElementById('imageInput');
+            const descInput = document.getElementById('imageDescription');
+            if (input.files.length > 0) {
+                const file = input.files[0];
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const container = document.createElement('div');
+                    container.classList.add('image-container');
+                    
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    
+                    const desc = document.createElement('p');
+                    desc.classList.add('description');
+                    desc.textContent = descInput.value;
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.textContent = "Șterge";
+                    deleteBtn.classList.add('delete-btn');
+                    deleteBtn.onclick = function() {
+                        container.remove();
+                    };
+                    
+                    container.appendChild(img);
+                    container.appendChild(desc);
+                    container.appendChild(deleteBtn);
+                    document.getElementById('imageGallery').appendChild(container);
+                }
+                reader.readAsDataURL(file);
+            } else {
+                alert("Selectați un fișier!");
+            }
+        }
+    </script>
+</body>
+</html>
